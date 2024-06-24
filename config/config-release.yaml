@@ -1,0 +1,14 @@
+ListenAddr: 127.0.0.1:8080
+AIDispatcherNodeProxyAddr: http://127.0.0.1:6000/a
+AITaskExecutorNodeProxyAddr: http://127.0.0.1:1088/b
+
+AIDispatcherNodeProxyAPIPath:
+  - /api/v0/ai/project/register
+  - /api/v0/ai/project/unregister
+
+AITaskExecutorNodeProxyAPIPath:
+  - /v1/chat/completions
+  - /v1/chat/generations
+  - /v1/images/edits
+  - /v1/models
+
