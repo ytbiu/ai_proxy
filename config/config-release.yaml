@@ -1,6 +1,6 @@
 ListenAddr: 127.0.0.1:8080
-AIDispatcherNodeProxyAddr: http://127.0.0.1:6000
-AITaskExecutorNodeProxyAddr: http://127.0.0.1:1088
+AIDispatcherNodeProxyAddr: http://127.0.0.1:7002
+AITaskExecutorNodeProxyAddr: http://127.0.0.1:1042
 
 AIDispatcherNodeProxyAPIPath:
   - /api/v0/ai/project/register
