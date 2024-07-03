@@ -26,7 +26,7 @@ func main() {
 	config.Init(mode)
 	common.Init()
 
-	gin.SetMode(mode)
+	//gin.SetMode(mode)
 	r := gin.Default()
 	router.Init(r)
 
