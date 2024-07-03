@@ -1,5 +1,5 @@
 ListenAddr: 0.0.0.0:8080
-AIDispatcherNodeProxyAddr: http:/172.17.0.1:7002
+AIDispatcherNodeProxyAddr: http://172.17.0.1:7002
 AITaskExecutorNodeProxyAddr: http://127.0.0.1:8000
 
 AIDispatcherNodeProxyAPIPath:
