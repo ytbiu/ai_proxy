@@ -64,22 +64,21 @@ func Call(method, url string, headers map[string][]string, requestPayloads ...fu
 	return resp, nil
 }
 
-func GinProxy(c *gin.Context) error {
-	req := c.Request
+type ReqPayloadOption struct {
+	Body map[string]interface{}
+}
 
+func ProxyCall(c *gin.Context, opt ReqPayloadOption) error {
+	req := c.Request
 	proxyAddr := Path2ProxyAddr[req.URL.Path]
 	if proxyAddr == "" {
 		return errors.New("GinProxy proxyAddr not found")
 	}
 	target := fmt.Sprintf("%s%s", proxyAddr, req.URL.Path)
 
-	resp, err := Call(req.Method, target, c.Request.Header, func(request *resty.Request) error {
+	resp, err := Call(req.Method, target, req.Header, func(request *resty.Request) error {
 		if strings.ToUpper(req.Method) == "POST" {
-			postBody := make(map[string]interface{})
-			if err := c.Bind(&postBody); err != nil {
-				return errors.Wrap(err, "Bind err")
-			}
-			request.SetBody(postBody)
+			request.SetBody(opt.Body)
 		}
 		return nil
 	})

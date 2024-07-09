@@ -3,6 +3,7 @@ package main
 import (
 	"ai_proxy/config"
 	"ai_proxy/router"
+	"ai_proxy/service"
 	"ai_proxy/service/common"
 	"flag"
 	"fmt"
@@ -29,6 +30,9 @@ func main() {
 	//gin.SetMode(mode)
 	r := gin.Default()
 	router.Init(r)
+
+	service.InitNodeId()
+	service.HealthCheckReportCronJob()
 
 	r.Run(config.ConfigInfo.ListenAddr)
 }

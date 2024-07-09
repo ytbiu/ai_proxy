@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -19,8 +20,18 @@ type Info struct {
 	AIDispatcherNodeProxyAddr   string
 	AITaskExecutorNodeProxyAddr string
 
-	AIDispatcherNodeProxyAPIPath   []string
-	AITaskExecutorNodeProxyAPIPath []string
+	AIDispatcherNodeProxyAPIPath     []string
+	AITaskExecutorNodeProxyAPIPath   []string
+	AIDispatcherNodeRegisterPath     string
+	AIDispatcherNodeUnRegisterPath   string
+	HealthCheckReportPeriodSeconds   int
+	HealthCheckServiceReportUrl      string
+	RegisterDataFile                 string
+	AIDispatcherNodeProxyGetPeerPath string
+}
+
+func (i *Info) GetPeerIdUrl() string {
+	return fmt.Sprintf("%s:%s", i.AIDispatcherNodeProxyAddr, i.AIDispatcherNodeProxyGetPeerPath)
 }
 
 func Init(mode string) {
