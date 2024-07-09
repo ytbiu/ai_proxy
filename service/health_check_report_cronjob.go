@@ -14,7 +14,7 @@ type ReportInfo struct {
 	Models  []RegisterModel
 }
 
-var reportInfo ReportInfo
+var reportInfo *ReportInfo
 
 type RegisterPayload struct {
 	Project string
@@ -47,7 +47,7 @@ func StartHealthCheckReport(payloadMap map[string]interface{}) {
 		return
 	}
 
-	reportInfo = ReportInfo{
+	reportInfo = &ReportInfo{
 		NodeId:  nodeId,
 		Project: payload.Project,
 		Models:  payload.Models,
@@ -66,7 +66,7 @@ func StopHealthCheckReport() {
 		logrus.Errorf("common.DeleteFile err : %s. RegisterDataFile : %s", err, config.ConfigInfo.RegisterDataFile)
 		return
 	}
-	reportInfo = ReportInfo{}
+	reportInfo = &ReportInfo{}
 }
 
 func HealthCheckReportCronJob() {
@@ -75,7 +75,7 @@ func HealthCheckReportCronJob() {
 		logrus.Infof("health check report will exec every %s after register", periodSecond)
 		for {
 			if common.FileExists(config.ConfigInfo.RegisterDataFile) {
-				if reportInfo.NodeId == "" {
+				if reportInfo == nil {
 					common.LoadFile(&reportInfo)
 				}
 
