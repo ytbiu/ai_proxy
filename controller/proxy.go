@@ -12,7 +12,7 @@ import (
 func Proxy(c *gin.Context) {
 	path := c.Request.URL.Path
 	l := logrus.WithField("path", path)
-	opt := common.ReqPayloadOption{}
+	opt := &common.ReqPayloadOption{}
 
 	if strings.ToUpper(c.Request.Method) == "POST" {
 		postBody := make(map[string]interface{})
@@ -22,6 +22,7 @@ func Proxy(c *gin.Context) {
 		}
 		opt.Body = postBody
 	}
+	logrus.Infof("opt : %+v", opt)
 	if err := common.ProxyCall(c, opt); err != nil {
 		l.Error("common.GinProxy err : ", err)
 		return

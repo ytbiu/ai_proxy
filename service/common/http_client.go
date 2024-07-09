@@ -68,7 +68,7 @@ type ReqPayloadOption struct {
 	Body map[string]interface{}
 }
 
-func ProxyCall(c *gin.Context, opt ReqPayloadOption) error {
+func ProxyCall(c *gin.Context, opt *ReqPayloadOption) error {
 	req := c.Request
 	proxyAddr := Path2ProxyAddr[req.URL.Path]
 	if proxyAddr == "" {
