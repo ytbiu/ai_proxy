@@ -46,7 +46,6 @@ func StartHealthCheckReport(payloadMap map[string]interface{}) {
 		logrus.Errorf("copier err : %s", err)
 		return
 	}
-	logrus.Info("p ", payload)
 
 	reportInfo = &ReportInfo{
 		NodeId:  nodeId,
