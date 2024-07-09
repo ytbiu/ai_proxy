@@ -3,7 +3,7 @@ package service
 import (
 	"ai_proxy/config"
 	"ai_proxy/service/common"
-	"github.com/jinzhu/copier"
+	"github.com/mitchellh/mapstructure"
 	"github.com/sirupsen/logrus"
 	"time"
 )
@@ -42,10 +42,11 @@ func InitNodeId() {
 
 func StartHealthCheckReport(payloadMap map[string]interface{}) {
 	var payload RegisterPayload
-	if err := copier.Copy(&payload, payloadMap); err != nil {
+	if err := mapstructure.Decode(payloadMap, &payload); err != nil {
 		logrus.Errorf("copier err : %s", err)
 		return
 	}
+	logrus.Info("p ", payload)
 
 	reportInfo = &ReportInfo{
 		NodeId:  nodeId,
