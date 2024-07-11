@@ -80,6 +80,8 @@ func HealthCheckReportCronJob() {
 	}()
 }
 
+var c *websocket.Conn
+
 func reportCronJob(periodSecond time.Duration) {
 	// wait for ws server start
 	time.Sleep(time.Second * 5)
@@ -88,7 +90,8 @@ func reportCronJob(periodSecond time.Duration) {
 	logrus.Infof("Connecting to %s", u.String())
 
 	// dial WebSocket server
-	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+	var err error
+	c, _, err = websocket.DefaultDialer.Dial(u.String(), nil)
 	if err != nil {
 		logrus.Fatal("dial:", err)
 	}
@@ -108,13 +111,13 @@ func reportCronJob(periodSecond time.Duration) {
 				WithField("project", reportInfo.Project).
 				WithField("models", reportInfo.Models).
 				Errorf("health check report err : %s", err)
-			TryToReconnect(c)
+			TryToReconnect()
 		}
 		time.Sleep(periodSecond)
 	}
 }
 
-func TryToReconnect(c *websocket.Conn) {
+func TryToReconnect() {
 	if c.WriteMessage(websocket.PingMessage, []byte{}) != nil {
 		u := url.URL{Scheme: "ws", Host: config.ConfigInfo.HealthCheckServiceReportAddr, Path: config.ConfigInfo.HealthCheckServiceReportPath}
 		logrus.Infof("Connecting to %s", u.String())
@@ -124,6 +127,7 @@ func TryToReconnect(c *websocket.Conn) {
 		if err != nil {
 			logrus.Error("reconnect:", err)
 		}
+
 		c = reConnect
 	}
 }
