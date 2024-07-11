@@ -126,8 +126,8 @@ func TryToReconnect() {
 		reConnect, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 		if err != nil {
 			logrus.Error("reconnect:", err)
+		} else {
+			c = reConnect
 		}
-
-		c = reConnect
 	}
 }
