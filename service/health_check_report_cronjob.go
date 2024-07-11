@@ -3,8 +3,11 @@ package service
 import (
 	"ai_proxy/config"
 	"ai_proxy/service/common"
+	"encoding/json"
+	"github.com/gorilla/websocket"
 	"github.com/mitchellh/mapstructure"
 	"github.com/sirupsen/logrus"
+	"net/url"
 	"time"
 )
 
@@ -73,26 +76,39 @@ func HealthCheckReportCronJob() {
 	go func() {
 		periodSecond := time.Duration(config.ConfigInfo.HealthCheckReportPeriodSeconds) * time.Second
 		logrus.Infof("health check report will exec every %s after register", periodSecond)
-		for {
-			if common.FileExists(config.ConfigInfo.RegisterDataFile) {
-				if reportInfo == nil {
-					common.LoadFile(&reportInfo)
-				}
+		reportCronJob(periodSecond)
+	}()
+}
 
-				err := common.Post(config.ConfigInfo.HealthCheckServiceReportUrl, nil, map[string]interface{}{
-					"node_id": reportInfo.NodeId,
-					"project": reportInfo.Project,
-					"models":  reportInfo.Models,
-				})
-				if err != nil {
-					logrus.WithField("node_id", reportInfo.NodeId).
-						WithField("project", reportInfo.Project).
-						WithField("models", reportInfo.Models).
-						Errorf("health check report err : %s", err)
-				}
-				logrus.Info("health check reported")
-				time.Sleep(periodSecond)
+func reportCronJob(periodSecond time.Duration) {
+	// wait for ws server start
+	time.Sleep(time.Second * 5)
+
+	u := url.URL{Scheme: "ws", Host: config.ConfigInfo.HealthCheckServiceReportAddr, Path: config.ConfigInfo.HealthCheckServiceReportPath}
+	logrus.Infof("Connecting to %s", u.String())
+
+	// dial WebSocket server
+	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+	if err != nil {
+		logrus.Fatal("dial:", err)
+	}
+	defer c.Close()
+
+	for {
+		if common.FileExists(config.ConfigInfo.RegisterDataFile) {
+			if reportInfo == nil {
+				common.LoadFile(&reportInfo)
 			}
 		}
-	}()
+
+		jsonData, _ := json.Marshal(reportInfo)
+		err := c.WriteMessage(websocket.TextMessage, jsonData)
+		if err != nil {
+			logrus.WithField("node_id", reportInfo.NodeId).
+				WithField("project", reportInfo.Project).
+				WithField("models", reportInfo.Models).
+				Errorf("health check report err : %s", err)
+		}
+		time.Sleep(periodSecond)
+	}
 }

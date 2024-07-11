@@ -25,9 +25,10 @@ type Info struct {
 	AIDispatcherNodeRegisterPath     string
 	AIDispatcherNodeUnRegisterPath   string
 	HealthCheckReportPeriodSeconds   int
-	HealthCheckServiceReportUrl      string
 	RegisterDataFile                 string
 	AIDispatcherNodeProxyGetPeerPath string
+	HealthCheckServiceReportAddr     string
+	HealthCheckServiceReportPath     string
 }
 
 func (i *Info) GetPeerIdUrl() string {

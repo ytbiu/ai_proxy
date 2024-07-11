@@ -1,7 +1,8 @@
 ListenAddr: 127.0.0.1:8080
 AIDispatcherNodeProxyAddr: http://127.0.0.1:8080/a
 AITaskExecutorNodeProxyAddr: http://127.0.0.1:8080/b
-HealthCheckServiceReportUrl: http://127.0.0.1:8081/api/v1/report
+HealthCheckServiceReportAddr: http://127.0.0.1:8081
+HealthCheckServiceReportPath: /api/v1/report
 
 AIDispatcherNodeRegisterPath: /api/v0/ai/project/register
 AIDispatcherNodeUnRegisterPath: /api/v0/ai/project/unregister
