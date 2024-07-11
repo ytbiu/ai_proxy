@@ -103,6 +103,7 @@ func reportCronJob(periodSecond time.Duration) {
 
 		jsonData, _ := json.Marshal(reportInfo)
 		err := c.WriteMessage(websocket.TextMessage, jsonData)
+		websocket.ErrCloseSent
 		if err != nil {
 			logrus.WithField("node_id", reportInfo.NodeId).
 				WithField("project", reportInfo.Project).
@@ -122,9 +123,8 @@ func TryToReconnect(c *websocket.Conn) {
 		// dial WebSocket server
 		reConnect, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 		if err != nil {
-			logrus.Fatal("dial:", err)
+			logrus.Error("reconnect:", err)
 		}
 		c = reConnect
-		return
 	}
 }
