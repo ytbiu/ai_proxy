@@ -103,7 +103,6 @@ func reportCronJob(periodSecond time.Duration) {
 
 		jsonData, _ := json.Marshal(reportInfo)
 		err := c.WriteMessage(websocket.TextMessage, jsonData)
-		websocket.ErrCloseSent
 		if err != nil {
 			logrus.WithField("node_id", reportInfo.NodeId).
 				WithField("project", reportInfo.Project).
