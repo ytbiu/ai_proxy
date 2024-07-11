@@ -108,7 +108,23 @@ func reportCronJob(periodSecond time.Duration) {
 				WithField("project", reportInfo.Project).
 				WithField("models", reportInfo.Models).
 				Errorf("health check report err : %s", err)
+			TryToReconnect(c)
 		}
 		time.Sleep(periodSecond)
+	}
+}
+
+func TryToReconnect(c *websocket.Conn) {
+	if c.WriteMessage(websocket.PingMessage, []byte{}) != nil {
+		u := url.URL{Scheme: "ws", Host: config.ConfigInfo.HealthCheckServiceReportAddr, Path: config.ConfigInfo.HealthCheckServiceReportPath}
+		logrus.Infof("Connecting to %s", u.String())
+
+		// dial WebSocket server
+		reConnect, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+		if err != nil {
+			logrus.Fatal("dial:", err)
+		}
+		c = reConnect
+		return
 	}
 }
