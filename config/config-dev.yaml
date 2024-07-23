@@ -10,9 +10,6 @@ AIDispatcherNodeProxyGetPeerPath: /api/v0/id
 
 RegisterDataFile: config/register_data.json
 
-AIDispatcherNodeProxyAPIPath:
-  - /api/v0/ai/project/register
-  - /api/v0/ai/project/unregister
 
 AITaskExecutorNodeProxyAPIPath:
   - /v1/chat/completions

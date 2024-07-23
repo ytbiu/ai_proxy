@@ -10,8 +10,4 @@ func Init(r *gin.Engine) {
 	for _, path := range config.ConfigInfo.AITaskExecutorNodeProxyAPIPath {
 		r.Any(path, controller.Proxy)
 	}
-
-	for _, path := range config.ConfigInfo.AIDispatcherNodeProxyAPIPath {
-		r.Any(path, controller.Proxy)
-	}
 }

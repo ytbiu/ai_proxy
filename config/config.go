@@ -20,7 +20,6 @@ type Info struct {
 	AIDispatcherNodeProxyAddr   string
 	AITaskExecutorNodeProxyAddr string
 
-	AIDispatcherNodeProxyAPIPath     []string
 	AITaskExecutorNodeProxyAPIPath   []string
 	AIDispatcherNodeRegisterPath     string
 	AIDispatcherNodeUnRegisterPath   string
