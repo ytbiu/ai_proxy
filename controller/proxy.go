@@ -9,6 +9,12 @@ import (
 	"strings"
 )
 
+type Response struct {
+	Code    string
+	Message string
+	Data    interface{}
+}
+
 func Proxy(c *gin.Context) {
 	path := c.Request.URL.Path
 	l := logrus.WithField("path", path)
@@ -25,6 +31,11 @@ func Proxy(c *gin.Context) {
 	logrus.Infof("opt : %+v", opt)
 	if err := common.ProxyCall(c, opt); err != nil {
 		l.Error("common.GinProxy err : ", err)
+		c.JSON(200, Response{
+			Code:    "-1",
+			Message: err.Error(),
+			Data:    nil,
+		})
 		return
 	}
 	if path == config.ConfigInfo.AIDispatcherNodeRegisterPath {
