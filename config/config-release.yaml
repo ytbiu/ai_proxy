@@ -10,8 +10,6 @@ AIDispatcherNodeRegisterPath: /api/v0/ai/project/register
 AIDispatcherNodeUnRegisterPath: /api/v0/ai/project/unregister
 RegisterDataFile: config/register_data.json
 
-
-
 AITaskExecutorNodeProxyAPIPath:
   - /v1/chat/completions
   - /v1/chat/generations

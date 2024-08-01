@@ -76,6 +76,45 @@ func ProxyCall(c *gin.Context, opt *ReqPayloadOption) error {
 	}
 	target := fmt.Sprintf("%s%s", proxyAddr, req.URL.Path)
 
+	if req.URL.Path == "/v1/chat/completions" || req.URL.Path == "/v1/chat/generations" {
+		signature := opt.Body["signature"]
+		if signature == nil {
+			return errors.New("signature is nil")
+		}
+
+		hash := opt.Body["hash"]
+		if signature == nil {
+			return errors.New("hash is nil")
+		}
+
+		wallet := opt.Body["wallet"]
+		if signature == nil {
+			return errors.New("wallet is nil")
+		}
+
+		sigHex, ok := signature.(string)
+		if !ok {
+			return errors.New("signature is not string type")
+		}
+		msgHex, ok := hash.(string)
+		if !ok {
+			return errors.New("hash is not string type")
+		}
+		walletAddressHex, ok := wallet.(string)
+		if !ok {
+			return errors.New("wallet is not string type")
+		}
+
+		valid, err := VerifySignature(msgHex, sigHex, walletAddressHex)
+		if err != nil {
+			return errors.WithMessage(err, "VerifySignature failed")
+		}
+
+		if !valid {
+			return errors.New("VerifySignature failed")
+		}
+	}
+
 	resp, err := Call(req.Method, target, req.Header, func(request *resty.Request) error {
 		if strings.ToUpper(req.Method) == "POST" {
 			request.SetBody(opt.Body)
